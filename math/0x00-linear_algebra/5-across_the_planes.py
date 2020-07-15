@@ -20,5 +20,5 @@ def add_matrices2D(mat1, mat2):
         return None
     else:
         matrix = [add_arrays(An, Bm) for An, Bm in zip(mat1, mat2)]
-        if matrix[0]:
+        if matrix[0] is not None:
             return matrix
