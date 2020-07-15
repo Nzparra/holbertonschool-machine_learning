@@ -3,6 +3,7 @@
 
 
 def matrix_shape(matrix):
+    """ calculates the shape of a matrix """
     if not isinstance(matrix, list):
         return [0]
     if (len(matrix) > 0 and not isinstance(matrix[0], list)):
