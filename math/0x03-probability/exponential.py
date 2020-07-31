@@ -15,7 +15,7 @@ class Exponential():
                 raise TypeError("data must be a list")
             if len(data) <= 1:
                 raise ValueError("data must contain multiple values")
-            self.lambtha = 1/sum(data)/len(data)
+            self.lambtha = 1/(sum(data)/len(data))
         else:
             lambtha = float(lambtha)
             if lambtha < 1:
