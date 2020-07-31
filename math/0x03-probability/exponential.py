@@ -22,14 +22,14 @@ class Exponential():
                 raise ValueError("lambtha must be a positive value")
             self.lambtha = lambtha
 
-    def pmf(self, x):
-        """ PMF for a given number of “successes” """
+    def pdf(self, x):
+        """ PDF for a given tme period """
         if x < 0:
             return 0
-        return (self.lambtha * (Exponential.e ** (-self.lambtha * x))
+        return (self.lambtha * (Exponential.e ** (-self.lambtha * x)))
 
     def cdf(self, x):
         """ CDF for a given number of “successes” """
-        if k < 0:
+        if x < 0:
             return 0
         return (1 - (Exponential.e ** (-self.lambtha * x)))
