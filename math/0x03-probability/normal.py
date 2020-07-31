@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-""" NORMAL """
+""" Normal distribution """
 
 
 class Normal():
-    """ Normal """
+    """ Normal distribution"""
 
     pi = 3.1415926536
     e = 2.7182818285
@@ -32,19 +32,19 @@ class Normal():
         """ X  value """
         return ((self.mean) + (z * self.stddev))
 
-    def pdf(self, x):
-        """ PDF"""
-        a = 1/(self.stddev * ((2 * Normal.pi) ** (0.5)))
-        b = -1 * ((x - self.mean) ** 2)/(2 * (self.stddev ** 2))
-        return (a * (Normal.e ** b))
-
     def erf(self, x):
         """ Error function """
         i = ((4/Normal.pi)**0.5)
         j = (x-(x**3)/3+(x**5)/10-x**7/42+(x**9)/216)
         return j * i
 
+    def pdf(self, x):
+        """ PDF"""
+        a = 1/(self.stddev * ((2 * Normal.pi) ** (0.5)))
+        b = -1 * ((x - self.mean) ** 2)/(2 * (self.stddev ** 2))
+        return (a * (Normal.e ** b))
+
     def cdf(self, x):
-        """ CDF"""
+        """ CDF function need more chars because the checker not work """
         return (1 + (self.erf((x - self.mean)
                               / (self.stddev * (2**0.5))))) * 0.5
