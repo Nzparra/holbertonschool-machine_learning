@@ -17,7 +17,7 @@ class Normal():
                 raise ValueError("data must contain multiple values")
             self.mean = sum(data)/len(data)
             add = sum([(abs((i - self.mean)**2)) for i in data])
-            self.stddev = ((add / len(data)) ** (0.5))
+            self.stddev = (add / len(data)) ** (0.5)
         else:
             if stddev < 1:
                 raise ValueError("stddev must be a positive value")
@@ -39,6 +39,7 @@ class Normal():
         return (a * (Normal.e ** b))
 
     def erf(self, x):
+        """ Error function """
         i = ((4/Normal.pi)**0.5)
         j = (x-(x**3)/3+(x**5)/10-x**7/42+(x**9)/216)
         return j * i
