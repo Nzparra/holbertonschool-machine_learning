@@ -24,6 +24,7 @@ class Poisson():
 
     def pmf(self, k):
         """ PMF for a given number of “successes” """
+        k = int(k)
         if k < 0:
             return 0
         fact = 1
