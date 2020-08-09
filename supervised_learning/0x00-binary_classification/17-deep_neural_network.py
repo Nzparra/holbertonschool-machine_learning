@@ -21,9 +21,9 @@ class DeepNeuralNetwork():
             raise TypeError("layers must be a list of positive integers")
         if len(layers) == 0:
             raise TypeError("layers must be a list of positive integers")
-        self.L = len(layers)
-        self.cache = {}
-        self.weights = {}
+        self.__L = len(layers)
+        self.__cache = {}
+        self.__weights = {}
         for i, layer in enumerate(layers):
             if type(layer) is not int or layer < 1:
                 raise TypeError("layers must be a list of positive integers")
