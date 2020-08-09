@@ -29,17 +29,17 @@ class Neuron():
         self.__A = 0
         self.__W = np.array([np.random.randn(nx)])
 
-        @property
-        def W(self):
-            """  The weights vector for the neuron """
-            return self.__W
+    @property
+    def W(self):
+        """  The weights vector for the neuron """
+        return self.__W
 
-        @property
-        def b(self):
-            """ The bias for the neuron """
-            return self.__b
+    @property
+    def b(self):
+        """ The bias for the neuron """
+        return self.__b
 
-        @property
-        def A(self):
-            """ The bias for the neuron """
-            return self.__A
+    @property
+    def A(self):
+        """ The bias for the neuron """
+        return self.__A
