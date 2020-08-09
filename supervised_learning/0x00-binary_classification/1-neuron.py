@@ -25,9 +25,9 @@ class Neuron():
             raise TypeError("nx must be an integer")
         if nx <= 0:
             raise ValueError("nx must be a positive integer")
-        self.b = 0
-        self.A = 0
-        self.W = np.array([np.random.randn(nx)])
+        self.__b = 0
+        self.__A = 0
+        self.__W = np.array([np.random.randn(nx)])
 
         @property
         def W(self):
