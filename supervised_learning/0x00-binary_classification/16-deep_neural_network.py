@@ -12,7 +12,7 @@ class DeepNeuralNetwork():
     """
 
     def __init__(self, nx, layers):
-        """ Init"""
+        """ Init Method to DeepNeural"""
         if type(nx) is not int:
             raise TypeError("nx must be an integer")
         if nx < 1:
@@ -20,7 +20,7 @@ class DeepNeuralNetwork():
         if type(layers) is not list:
             raise TypeError("layers must be a list of positive integers")
         if len(layers) == 0:
-            raise ValueError("layers must be a list of positive integers")
+            raise TypeError("layers must be a list of positive integers")
         self.L = len(layers)
         self.cache = {}
         self.weights = {}
