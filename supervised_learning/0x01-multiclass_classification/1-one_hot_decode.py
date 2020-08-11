@@ -17,8 +17,8 @@ def one_hot_decode(one_hot):
         if sum(j) > 1:
             return None
         for ij, ik in enumerate(j):
-            if (ik) > 1 or (ik != 0 and ik != 1):
+            if (ik > 1) or (ik != 0 and ik != 1):
                 return None
-            if ij == 1:
+            if ik == 1:
                 decode[i] = ij
     return decode
