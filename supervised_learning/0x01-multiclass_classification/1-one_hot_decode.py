@@ -10,7 +10,8 @@ def one_hot_decode(one_hot):
         classes is the maximum number of classes
         m is the number of examples
     """
-    if not isinstance(one_hot, np.ndarray):
+    if not isinstance(one_hot, np.ndarray) or len(one_hot) == 0 \
+            or len(one_hot.shape) != 2:
         return None
     decode = np.zeros(one_hot.shape[1], dtype=int)
     for i, j in enumerate(one_hot.transpose()):
