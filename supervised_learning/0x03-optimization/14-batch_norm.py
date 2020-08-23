@@ -23,7 +23,7 @@ def create_batch_norm_layer(prev, n, activation):
     Z_ = tf.nn.batch_normalization(x=Z, mean=m, variance=v,
                                    offset=beta, scale=gamma,
                                    variance_epsilon=eps)
-    if activation:
-        return activation(Z_)
-    else:
+    if not activation:
         return Z_
+    else:
+        return activation(Z_)
