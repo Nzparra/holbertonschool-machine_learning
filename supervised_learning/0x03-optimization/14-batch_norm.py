@@ -16,8 +16,8 @@ def create_batch_norm_layer(prev, n, activation):
     Z = lay(prev)
     gamma = tf.Variable(tf.constant(1, dtype=tf.float32, shape=[n]),
                         name='gamma', trainable=True)
-    beta = tf.Variale(tf.constant(0, dtype=tf.float32, shape=[n]),
-                      name='beta', trainable=True)
+    beta = tf.Variable(tf.constant(0, dtype=tf.float32, shape=[n]),
+                       name='beta', trainable=True)
     eps = tf.constant(1e-8)
     m, v = tf.nn.moments(Z, axes=[0])
     Z_ = tf.nn.batch_normalization(x=Z, mean=m, variance=v,
