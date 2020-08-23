@@ -15,7 +15,7 @@ def create_batch_norm_layer(prev, n, activation):
     lay = tf.layers.Dense(units=n, kernel_initializer=w)
     Z = lay(prev)
     gamma = tf.Variable(tf.constant(1, dtype=tf.float32, shape=[n]),
-                        name='gamma', tainable=True)
+                        name='gamma', trainable=True)
     beta = tf.Variale(tf.constant(0, dtype=tf.float32, shape=[n]),
                       name='beta', trainable=True)
     eps = tf.constant(1e-8)
