@@ -26,14 +26,13 @@ def train_model(network, data, labels, batch_size, epochs,
             Learning Rate
         """
         return (alpha / (1 + decay_rate * (epoch / 1)))
-    call = []
-    if early_stopping and validation_data:
-        call.append(K.callbacks.EarlyStopping(patience=patience))
-    if learning_rate_decay and validation_data:
-        call.append(K.callbacks.LearningRateSchedule(learning,
+    call = None
+    if validation_data:
+        call.append(K.callbacks.EarlyStopping(patience=patience,
+                                              monitor='val_loss'))
+    if learning_rate_decay:
+        call.append(K.callbacks.LearningRateSchedule(schedule=learning,
                                                      verbose=1))
-    if len(call) == 0:
-        call = None
     history = network.fit(x=data, y=labels, batch_size=batch_size,
                           verbose=verbose, shuffle=shuffle, epochs=epochs,
                           validation_data=validation_data, callbacks=call)
