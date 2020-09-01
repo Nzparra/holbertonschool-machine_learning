@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """ builds a neural network with the K library """
 
-import tensorflow.K as K
+import tensorflow.keras as K
 
 
 def build_model(nx, layers, activations, lambtha, keep_prob):
