@@ -10,10 +10,11 @@ def conv_backward(dZ, A_prev, W, b, padding="same", stride=(1, 1)):
     """
         Returns: the output of the convolutional layer
     """
-    sh, sw = stride
-    kh, kw, c_prev, c_new = W.shape
+
     m, h_prev, w_prev, c_prev = A_prev.shape
     m, h_new, w_new, c_new = dZ.shape
+    sh, sw = stride
+    kh, kw, c_prev, c_new = W.shape
     if padding == "valid":
         ph, pw = (0, 0)
     if padding == "same":
@@ -34,11 +35,12 @@ def conv_backward(dZ, A_prev, W, b, padding="same", stride=(1, 1)):
                     end = (j * sh) + kh
                     stw = k * sw
                     endw = (k * sw) + kw
+                    x = ima[st:end, stw:endw]
                     aux = W[:, :, :, l] * dZ[i, j, k, l]
                     Dima[st:end, stw:endw] += aux
-                    dW[:, :, :, l] += ima[st:end, stw:endw] * dZ[i, j, k, l]
-    if (padding == 'valid'):
-        dA[i] += Dima
-    if (padding == 'same'):
-        dA[i] += Dima[ph: -ph, pw: -pw]
+                    dW[:, :, :, l] += x * dZ[i, j, k, l]
+        if (padding == 'valid'):
+            dA[i] += Dima
+        if (padding == 'same'):
+            dA[i] += Dima[ph: -ph, pw: -pw]
     return (dA, dW, db)
