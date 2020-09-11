@@ -30,10 +30,10 @@ def conv_backward(dZ, A_prev, W, b, padding="same", stride=(1, 1)):
         for j in range(h_new):
             for k in range(w_new):
                 for l in range(c_new):
-                    st = i * sh
-                    end = (i * sh) + kh
-                    stw = j * sw
-                    endw = (j * sw) + kw
+                    st = j * sh
+                    end = (j * sh) + kh
+                    stw = k * sw
+                    endw = (k * sw) + kw
                     aux = W[:, :, :, l] * dZ[i, j, k, l]
                     Dima[st:end, stw:endw] += aux
                     dW[:, :, :, l] += ima[st:end, stw:endw] * dZ[i, j, k, l]
