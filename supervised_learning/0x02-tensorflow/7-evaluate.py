@@ -1,14 +1,10 @@
-#!usr/bin/env python3
-""" Restore save trained DNN """
-
+#!/usr/bin/env python3
+"""Evaluate module"""
 import tensorflow as tf
 
 
 def evaluate(X, Y, save_path):
-    """
-    Returns: the networks prediction, accuracy, and loss,
-             respectively
-    """
+    """Function that evaluates the output of a neural network"""
     with tf.Session() as sess:
         saver = tf.train.import_meta_graph('{}.meta'.format(save_path))
         saver.restore(sess, '{}'.format(save_path))
