@@ -12,7 +12,7 @@ def train(X_train, Y_train, X_valid, Y_valid,
           layer_sizes, activations, alpha, iterations,
           save_path="/tmp/model.ckpt"):
     """  Builds, trains, and saves a
-    neural network classifier
+    neural network classifier in this function its important
     """
     _, nx = X_train.shape
     _, classes = Y_train.shape
