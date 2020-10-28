@@ -12,4 +12,5 @@ def pca(X, var=0.95):
     U, S, VT = np.linalg.svd(X)
     t_variance = np.cumsum(S) / np.sum(S)
     r = np.argwhere(t_variance >= var)[0, 0]
-    return VT[:r + 1].T
+    W = VT[:r + 1].T
+    return W
