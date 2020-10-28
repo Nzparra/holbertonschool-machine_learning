@@ -10,10 +10,6 @@ def pca(X, var=0.95):
     of X‘s original variance
     """
     U, S, VT = np.linalg.svd(X)
-    cumsum_array = np.cumsum(S)
-    threshold = cumsum_array[-1] * var
-    mask = np.where(cumsum_array < threshold)
-    r = len(cumsum_array[mask])
-    W = VT.T
-    Wr = W[:, :r+1]
-    return Wr
+    t_variance = np.cumsum(S) / np.sum(S)
+    r = np.argwhere(t_variance >= var)[0, 0]
+    return VT[:r + 1].T
