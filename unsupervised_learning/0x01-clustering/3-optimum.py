@@ -1,25 +1,37 @@
 #!/usr/bin/env python3
-""" Optimun """
+""" optimizing  """
 
 import numpy as np
+kmeans = __import__('1-kmeans').kmeans
+variance = __import__('2-variance').variance
 
 
-def variance(X, C):
+def optimum_k(X, kmin=1, kmax=None, iterations=1000):
     """
-        Returns: var, or None on failure
+        Returns: results, d_vars, or None, None on failure
     """
     if type(X) is not np.ndarray or len(X.shape) != 2:
-        return None
-    if type(C) is not np.ndarray or len(C.shape) != 2:
-        return None
-    if X.shape[1] != C.shape[1]:
-        return None
-    if C.shape[0] > X.shape[0]:
-        return None
+        return (None, None)
+    if type(kmin) is not int:
+        return (None, None)
+    if type(iterations) is not int:
+        return (None, None)
+    if kmax is not None and type(kmax) is not int:
+        return (None, None)
     n, _ = X.shape
-    data = X[:, np.newaxis, :]
-    centr = C[np.newaxis, :, :]
-    dist = (np.square(data - centr)).sum(axis=2)
-    mini_per_datapoint = np.amin(dist, axis=1)
-    var = np.sum(mini_per_datapoint)
-    return var
+    if kmax is None:
+        kmax = n
+    if kmin <= 0 or kmax <= 0 or iterations <= 0:
+        return (None, None)
+    if kmin >= kmax:
+        return (None, None)
+    results = []
+    d_vars = []
+    for i in range(kmin, kmax + 1):
+        centroids, clss = kmeans(X, i, iterations)
+        results.append((centroids, clss))
+        if i == kmin:
+            initial = variance(X, centroids)
+        var = variance(X, centroids)
+        d_vars.append(initial - var)
+    return (results, d_vars)
