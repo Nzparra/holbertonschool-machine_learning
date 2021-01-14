@@ -36,3 +36,13 @@ class Dataset():
         tokenizer_pt = tfds.features.text.SubwordTextEncoder.build_from_corpus(
             (pt.numpy() for pt, en in data), target_vocab_size=2 ** 15)
         return (tokenizer_pt, tokenizer_en)
+
+    def encode(self, pt, en):
+        """
+        Returns: pt_tokens, en_tokens
+        """
+        lang1 = [self.tokenizer_pt.vocab_size] + self.tokenizer_pt.encode(
+            pt.numpy()) + [self.tokenizer_pt.vocab_size + 1]
+        lang2 = [self.tokenizer_en.vocab_size] + self.tokenizer_en.encode(
+            en.numpy()) + [self.tokenizer_en.vocab_size + 1]
+        return lang1, lang2
