@@ -1,80 +1,107 @@
 #!/usr/bin/env python3
 """
-Precision BLEU
-Bilingual evaluation understudy
+contains the def cumulative_bleu(references, sentence, n)
+based on
+https://ariepratama.github.io/Introduction-to-BLEU-in-python/
 """
 
 import numpy as np
 
 
-def get_gram(sentence, n):
+def grams(sentence, n):
     """
-    create grams from sentence
+    creates groups of n-grams
+    :param sentence: list containing the model proposed sentence
+    :param n: size of the n-gram to use for evaluation
+    :return: new
     """
-    list_grams_cand = []
-    for i in range(len(sentence)):
-        last = i + n
-        begin = i
-        if last >= len(sentence) + 1:
-            break
-        aux = sentence[begin: last]
-        result = ' '.join(aux)
-        list_grams_cand.append(result)
-    return list_grams_cand
+    new = []
+    ln = len(sentence)
+    for i, word in enumerate(sentence):
+        s = word
+        counter = 0
+        j = 0
+        for j in range(1, n):
+            if ln > i + j:
+                s += " " + sentence[i + j]
+                counter += 1
+        if counter == j:
+            new.append(s)
+    return new
 
 
-def ngram_bleu(references, sentence, n):
+def transform_grams(references, sentence, n):
     """
-    * references is a list of reference translations
-    * each reference translation is a list of the words in the translation
-    * sentence is a list containing the model proposed sentence
-    * n is the size of the n-gram to use for evaluation
-    Returns: the n-gram BLEU score
+    transforms all references and sentence according n-gram
+    :param references: list of reference translations
+    :param sentence: list containing the model proposed sentence
+    :param n: size of the n-gram to use for evaluation
+    :return: new_ref, new_sentence
     """
-    dict_words = {}
-    cand_grams = get_gram(sentence, n)
-    cand_grams = list(set(cand_grams))
-    len_cand = len(cand_grams)
-    reference_grams = []
-    for reference in references:
-        list_grams = get_gram(reference, n)
-        reference_grams.append(list_grams)
-    for grams in reference_grams:
-        for word in grams:
-            if word in cand_grams:
-                if word not in dict_words.keys():
-                    dict_words[word] = grams.count(word)
-                else:
-                    actual = grams.count(word)
-                    prev = dict_words[word]
-                    dict_words[word] = max(actual, prev)
-    p = sum(dict_words.values()) / len_cand
-    return p
+    if n == 1:
+        return references, sentence
+    new_sentence = grams(sentence, n)
+    new_ref = []
+    for ref in references:
+        new_r = grams(ref, n)
+        new_ref.append(new_r)
+
+    return new_ref, new_sentence
+
+
+def calc_precision(references, sentence, n):
+    """
+    calculates the precision for the n-gram BLEU score for a sentence
+    :param references: list of reference translations
+    :param sentence: list containing the model proposed sentence
+    :param n: size of the n-gram to use for evaluation
+    :return: precision
+    """
+    references, sentence = transform_grams(references, sentence, n)
+    sentence_dict = {x: sentence.count(x) for x in sentence}
+    references_dict = {}
+    for ref in references:
+        for gram in ref:
+            if gram not in references_dict.keys() \
+                    or references_dict[gram] < ref.count(gram):
+                references_dict[gram] = ref.count(gram)
+    appearances = {x: 0 for x in sentence}
+    for ref in references:
+        for gram in appearances.keys():
+            if gram in ref:
+                appearances[gram] = sentence_dict[gram]
+    for gram in appearances.keys():
+        if gram in references_dict.keys():
+            appearances[gram] = min(references_dict[gram], appearances[gram])
+    len_trans = len(sentence)
+    precision = sum(appearances.values()) / len_trans
+
+    return precision
 
 
 def cumulative_bleu(references, sentence, n):
     """
-    * references is a list of reference translations
-    * each reference translation is a list of the words in the translation
-    * sentence is a list containing the model proposed sentence
-    * n is the size of the largest n-gram to use for evaluation
-    * All n-gram scores should be weighted evenly
-    Returns: the cumulative n-gram BLEU score
+    calculates the cumulative n-gram BLEU score for a sentence
+    :param references: list of reference translations
+    :param sentence: list containing the model proposed sentence
+    :param n: size of the largest n-gram to use for evaluation
+    :return: cumulative n-gram BLEU score
     """
-    p_tot = []
-    for i in range(1, n+1):
-        result = ngram_bleu(references, sentence, i)
-        p_tot.append(result)
-    best_match_tuples = []
-    for reference in references:
-        ref_len = len(reference)
-        diff = abs(ref_len - len(sentence))
-        best_match_tuples.append((diff, ref_len))
-    sort_tuples = sorted(best_match_tuples, key=lambda x: x[0])
-    best_match = sort_tuples[0][1]
-    if len(sentence) > best_match:
-        bp = 1
+    precisions = [0] * n
+    for i in range(0, n):
+        precisions[i] = calc_precision(references, sentence, i+1)
+
+    geo_mean = np.exp(np.sum((1/n) * np.log(precisions)))
+
+    len_trans = len(sentence)
+    closest_ref_idx = np.argmin([abs(len(x) - len_trans) for x in references])
+    reference_length = len(references[closest_ref_idx])
+
+    if len_trans > reference_length:
+        BP = 1
     else:
-        bp = np.exp(1 - (best_match / len(sentence)))
-    Bleu_score = bp * np.exp(np.sum(np.log(p_tot)) / n)
-    return Bleu_score
+        BP = np.exp(1 - float(reference_length) / len_trans)
+
+    bleu = BP * geo_mean
+
+    return bleu
