@@ -1,26 +1,20 @@
 #!/usr/bin/env python3
-"""
-Printing the location of a specific user
-"""
-import sys
+""" script that prints the location of a specific user """
 import requests
 import time
+import sys
 
 
 if __name__ == '__main__':
+    if len(sys.argv) > 1:
+        user = sys.argv[1]
 
-    url = sys.argv[1]
-    payload = {'Accept': 'application/vnd.github.v3+json'}
-    r = requests.get(url, params=payload)
-    # Status: 403 Forbidden
-    if r.status_code == 403:
-        limit = r.headers["X-Ratelimit-Reset"]
-        x = (int(limit) - int(time.time())) / 60
-        print("Reset in {} min".format(int(x)))
-    # Status: 200 OK
+    r = requests.get(user)
     if r.status_code == 200:
-        location = r.json()["location"]
-        print(location)
-    # Status: 404 Not Found
-    if r.status_code == 404:
+        print(r.json()['location'])
+    elif r.status_code == 403:
+        limit = r.headers['X-Ratelimit-Reset']
+        limit = int((int(limit) - int(time.time())) / 60)
+        print('Reset in {} min'.format(limit))
+    else:
         print("Not found")
